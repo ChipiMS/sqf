@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqf_lite/database_helper.dart';
+import 'package:sqf_lite/list.dart';
 
 void main() => runApp(Principal());
 
@@ -9,7 +10,7 @@ class Principal extends StatelessWidget{
     // TODO: implement build
     return MaterialApp(
       title: 'Ejemplo con SQFLite',
-      home: Clientes(),
+      home: List(),
     );
   }
 }
