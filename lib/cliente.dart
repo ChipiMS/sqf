@@ -12,9 +12,18 @@ class Cliente extends StatefulWidget{
 }
 
 class ClienteState extends State<Cliente>{
+  bool finished = false;
   final DBHelper = DataBaseHelper.instancia;
   final nameController = TextEditingController();
   final ageController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the Widget is disposed
+    nameController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
 
   void agregarCliente() async{
     Map<String,dynamic> row = {
@@ -29,16 +38,22 @@ class ClienteState extends State<Cliente>{
     print('Registro Insertado id: $id');
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    nameController.dispose();
-    ageController.dispose();
-    super.dispose();
+  void actualizarCliente() async{
+    Map<String, dynamic> row = {
+      'idCliente' : widget.cliente["idCliente"],
+      'nomCliente': nameController.text,
+      'edadCliente': ageController.text
+    };
+    final rowsAffected = await DBHelper.actualizar(row);
+    print('Se actualizaron $rowsAffected registros');
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    if(finished){
+      if(widget.cliente["idCliente"] != null)
+        return Text("Cliente actualizado");
+      return Text("Cliente agregado");
+    }
     return Column(
       children: <Widget>[
         TextFormField(
@@ -53,7 +68,7 @@ class ClienteState extends State<Cliente>{
         TextFormField(
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: "Introduce el nombre",
+            hintText: "Introduce la edad",
             contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(32))
           ),
@@ -61,14 +76,23 @@ class ClienteState extends State<Cliente>{
         ),
         RaisedButton(
           onPressed: (){
-            agregarCliente();
+            if(ageController.text.length > 0 && nameController.text.length > 0) {
+              if(widget.cliente["idCliente"] != null){
+                actualizarCliente();
+              }
+              else{
+                agregarCliente();
+              }
+              finished = true;
+              setState(() {});
+            }
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25)
           ),
           padding: EdgeInsets.all(12),
           color: Colors.green,
-          child: Text("Agregar",
+          child: Text((widget.cliente["idCliente"] != null ? "Actualizar" : "Agregar"),
             style: TextStyle(
               color: Colors.white
             ),
@@ -76,5 +100,13 @@ class ClienteState extends State<Cliente>{
         )
       ],
     );
+  }
+  @override
+  void initState() {
+    super.initState();
+    if(widget.cliente["idCliente"] != null){
+      nameController.text = widget.cliente["nomCliente"];
+      ageController.text = "${widget.cliente["edadCliente"]}";
+    }
   }
 }

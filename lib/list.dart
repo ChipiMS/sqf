@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqf_lite/menu.dart';
 import 'package:sqf_lite/database_helper.dart';
+import 'package:sqf_lite/cliente.dart';
 
 class List extends StatelessWidget{
   @override
@@ -30,6 +31,30 @@ class MenuLateralState extends State<MenuLateral>{
     setState((){});
   }
 
+  editClient(client){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Actualizar cliente"),
+          content: Cliente(
+            cliente: client
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Terminar"),
+              onPressed: () {
+                load();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -54,7 +79,21 @@ class MenuLateralState extends State<MenuLateral>{
               padding: EdgeInsets.all(10),
               child: Row(
                 children: <Widget>[
-                  Text("${clientes[index]["nomCliente"]}:${clientes[index]["edadCliente"]}")
+                  Text("${clientes[index]["nomCliente"]}:${clientes[index]["edadCliente"]}"),
+                  Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          editClient(clientes[index]);
+                        }
+                      ),
+                      /*IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: deleteClient(clientes[index]["idCliente"]),
+                      )*/
+                    ]
+                  )
                 ],
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               ),

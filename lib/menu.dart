@@ -12,7 +12,7 @@ class Menu{
             builder: (BuildContext context) {
               // return object of type Dialog
               return AlertDialog(
-                title: new Text("Categorias favoritas"),
+                title: new Text("Agregar cliente"),
                 content: Cliente(
                   cliente: {}
                 ),
