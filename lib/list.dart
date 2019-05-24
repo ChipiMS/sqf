@@ -31,6 +31,12 @@ class MenuLateralState extends State<MenuLateral>{
     setState((){});
   }
 
+  deleteClient(id) async{
+    final rowsDeleted = await DBHelper.eliminar(id);
+    print('Se borró el registro $id');
+    load();
+  }
+
   editClient(client){
     showDialog(
       context: context,
@@ -88,10 +94,12 @@ class MenuLateralState extends State<MenuLateral>{
                           editClient(clientes[index]);
                         }
                       ),
-                      /*IconButton(
+                      IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: deleteClient(clientes[index]["idCliente"]),
-                      )*/
+                        onPressed: () {
+                          deleteClient(clientes[index]["idCliente"]);
+                        }
+                      )
                     ]
                   )
                 ],
